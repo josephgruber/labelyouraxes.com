@@ -12,9 +12,13 @@
 </head>
 
 <body>
-    <h1 class="text-center">Label your axes!</h1>
+    <div class="container">
+        <h1 class="text-center">Label your axes!</h1>
 
-    <canvas id="chart"></canvas>
+        <div class="chart-container">
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -37,7 +41,14 @@
                     fill: false,
                     borderColor: 'rgb(75, 192, 192)',
                     tension: 0.1
-                }]
+                },
+                {
+                    data: [83, 96, 43, 21, 36, 95, 39],
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }
+                ]
             },
             options: {
                 plugins: {
