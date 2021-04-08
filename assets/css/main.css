@@ -4,6 +4,10 @@ body {
     font-family: "Raleway", sans-serif;
 }
 
+.chart {
+    width: 70% !important;
+    height: 45% !important;
+}
 .footer {
     display: block;
 }
