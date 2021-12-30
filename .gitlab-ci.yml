@@ -1,8 +1,8 @@
 deploy:
-    stage: deploy
-    image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
-    script:
-        - aws s3 sync ./ s3://$S3_BUCKET_NAME --delete --exclude '.git/*' --exclude '.gitlab-ci.yml'
-        - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
-    only:
-        - main
+  stage: deploy
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  script:
+    - aws s3 sync ./ s3://$S3_BUCKET_NAME --delete --exclude '.git/*' --exclude '.gitlab-ci.yml' --exclude 'tf/*'
+    - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
+  only:
+    - main
