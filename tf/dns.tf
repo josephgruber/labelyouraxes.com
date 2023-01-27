@@ -1,7 +1,5 @@
 resource "aws_route53_zone" "zone" {
-  name          = var.domain
-  comment       = ""
-  force_destroy = false
+  name = var.domain
 }
 
 resource "aws_route53_record" "nameservers" {

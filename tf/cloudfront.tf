@@ -1,32 +1,29 @@
+locals {
+  s3_origin_id = "s3LabelYourAxes"
+}
+
 data "aws_cloudfront_cache_policy" "cache_policy" {
   name = "Managed-CachingOptimized"
 }
-resource "aws_cloudfront_origin_access_identity" "oai" {
-  comment = "access-identity-${var.domain}"
-}
 
-resource "aws_cloudfront_distribution" "distribution" {
-  origin {
-    domain_name         = aws_s3_bucket.main.bucket_regional_domain_name
-    origin_id           = "S3-${var.domain}"
-    connection_attempts = 3
-    connection_timeout  = 10
-
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path
-    }
-  }
+resource "aws_cloudfront_distribution" "distribution" { #tfsec:ignore:aws-cloudfront-enable-logging tfsec:ignore:aws-cloudfront-enable-waf
   enabled             = true
   is_ipv6_enabled     = true
   aliases             = [var.domain]
   default_root_object = "index.html"
   price_class         = "PriceClass_100"
 
+  origin {
+    domain_name              = aws_s3_bucket.main.bucket_regional_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.s3.id
+    origin_id                = local.s3_origin_id
+  }
+
   default_cache_behavior {
     cache_policy_id        = data.aws_cloudfront_cache_policy.cache_policy.id
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "S3-${var.domain}"
+    target_origin_id       = local.s3_origin_id
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
   }
@@ -42,4 +39,12 @@ resource "aws_cloudfront_distribution" "distribution" {
     minimum_protocol_version = "TLSv1.2_2021"
   }
 
+}
+
+resource "aws_cloudfront_origin_access_control" "s3" {
+  name                              = aws_s3_bucket.main.bucket_regional_domain_name
+  description                       = "-"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
 }
