@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: "uv"
+  - package-ecosystem: "terraform"
     directories: ["infra/infra-remote-state", "infra/infra-website"]
     schedule:
       interval: "weekly"
